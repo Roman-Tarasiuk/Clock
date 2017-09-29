@@ -28,7 +28,8 @@ namespace Clock
             get
             {
                 CreateParams cp = base.CreateParams;
-                cp.Style |= WS_MINIMIZEBOX | WS_SYSMENU;
+                // turn on WS_EX_TOOLWINDOW style bit
+                cp.ExStyle |= 0x80;
                 return cp;
             }
         }
