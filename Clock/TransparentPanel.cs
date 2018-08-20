@@ -85,7 +85,10 @@ namespace VisualComponents
             Point LocationNew = new Point(this.Location.X + e.Location.X - m_MouseDownCoordinates.X,
                 this.Location.Y + e.Location.Y - m_MouseDownCoordinates.Y);
 
-            Move?.Invoke(this, new MovingPanelEventArgs(LocationNew.X, LocationNew.Y));
+            if (Move != null)
+            {
+                Move.Invoke(this, new MovingPanelEventArgs(LocationNew.X, LocationNew.Y));
+            }
         }
 
         //
@@ -103,7 +106,10 @@ namespace VisualComponents
 
         private void OnClicking()
         {
-            MouseClick?.Invoke(this, new MouseEventArgs(MouseButtons.None, 0, 0, 0, 0));
+            if (MouseClick != null)
+            {
+                MouseClick.Invoke(this, new MouseEventArgs(MouseButtons.None, 0, 0, 0, 0));
+            }
         }
 
         #endregion

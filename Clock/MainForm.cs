@@ -12,7 +12,7 @@ namespace Clock
         #region Private Members
 
         private bool m_Minimize = false;
-        private DateTime m_TheDate = DateTime.Now;
+        private DateTime m_CurrentDate = DateTime.Now;
 
         private Size m_WindowSize = new Size(78, 38);
 
@@ -95,12 +95,13 @@ namespace Clock
             if (start || DateChanged(now))
             {
                 lblDate.Text = string.Format("{0:D2}.{1:D2}.{2:D2}", now.Day, now.Month, now.Year);
+                m_CurrentDate = now;
             }
         }
 
         private bool DateChanged(DateTime now)
         {
-            if (m_TheDate.Day != now.Day || m_TheDate.Month != now.Month || m_TheDate.Year != now.Year)
+            if (m_CurrentDate.Day != now.Day || m_CurrentDate.Month != now.Month || m_CurrentDate.Year != now.Year)
             {
                 return true;
             }
