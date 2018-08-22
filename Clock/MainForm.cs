@@ -13,10 +13,11 @@ namespace Clock
 
         private bool m_Minimize = false;
         private DateTime m_CurrentDate = DateTime.Now;
+        private bool m_Moving = false;
 
         private Size m_WindowSize = new Size(78, 38);
 
-        private TransparentPanel panel1;
+        private TransparentDraggablePanel panel1;
 
         #endregion
 
@@ -44,31 +45,41 @@ namespace Clock
 
         private void InitializePanel()
         {
-            this.panel1 = new TransparentPanel();
-
+            this.panel1 = new TransparentDraggablePanel(this);
+            this.panel1.Anchor = ((System.Windows.Forms.AnchorStyles)
+                System.Windows.Forms.AnchorStyles.Top
+                | System.Windows.Forms.AnchorStyles.Bottom
+                | System.Windows.Forms.AnchorStyles.Left
+                | System.Windows.Forms.AnchorStyles.Right);
             this.panel1.Location = new System.Drawing.Point(0, 0);
             this.panel1.Name = "panel1";
-            this.panel1.Size = m_WindowSize;
+            this.panel1.Size = this.Size;
             this.panel1.TabIndex = 2;
-
-            this.panel1.Move += Panel1_Moving;
             this.panel1.MouseClick += Panel1_MouseClick;
-
-            this.panel1.ContextMenuStrip = contextMenuStrip1;
+            this.panel1.Moved += (s, e) =>
+            {
+                m_Moving = true;
+            };
 
             this.Controls.Add(this.panel1);
-
             this.panel1.BringToFront();
         }
 
         private void Panel1_MouseClick(object sender, MouseEventArgs e)
         {
-            CalendarForm calendar = new CalendarForm();
-            calendar.SetLocationAndSize(this);
+            if (!m_Moving)
+            {
+                CalendarForm calendar = new CalendarForm();
+                calendar.SetLocationAndSize(this);
 
-            calendar.ShowDialog();
+                calendar.ShowDialog();
 
-            User32Helper.ShowWindow(this.Handle, User32Helper.SW_RESTORE);
+                User32Helper.ShowWindow(this.Handle, User32Helper.SW_RESTORE);
+            }
+            else
+            {
+                m_Moving = false;
+            }
         }
 
         private void Panel1_Moving(object sender, MovingPanelEventArgs e)

@@ -10,26 +10,28 @@ namespace VisualComponents
 {
     // https://stackoverflow.com/questions/4463363/how-can-i-set-the-opacity-or-transparency-of-a-panel-in-winforms
 
-    public class TransparentPanel : Panel
+    public class TransparentDraggablePanel : Panel
     {
-        #region Private Fields
-
         private bool m_MouseIsDown = false;
-        private bool m_MouseClick = false;
         private Point m_MouseDownCoordinates;
+        private Form m_HostForm;
 
-        #endregion
+        public TransparentDraggablePanel(Form host)
+        {
+            this.m_HostForm = host;
 
+            InitializeComponents();
+        }
 
-        #region Public Events
+        public event EventHandler Moved;
 
-        public event EventHandler<MovingPanelEventArgs> Move;
-        public event EventHandler<MouseEventArgs> MouseClick;
-
-        #endregion
-
-
-        #region Overriden Protected Methods
+        protected void OnMove()
+        {
+            if (this.Moved != null)
+            {
+                this.Moved(this, EventArgs.Empty);
+            }
+        }
 
         protected override CreateParams CreateParams
         {
@@ -40,78 +42,40 @@ namespace VisualComponents
                 return cp;
             }
         }
-
         protected override void OnPaintBackground(PaintEventArgs e)
         {
             //base.OnPaintBackground(e);
         }
 
-        protected override void OnMouseDown(MouseEventArgs e)
+        private void InitializeComponents()
         {
-            m_MouseIsDown = true;
+            this.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+            | System.Windows.Forms.AnchorStyles.Left)
+            | System.Windows.Forms.AnchorStyles.Right)));
 
-            if (e.Button != MouseButtons.Right)
+            this.MouseDown += (sender, e) =>
             {
-                m_MouseClick = true;
-            }
+                m_MouseIsDown = true;
+                m_MouseDownCoordinates = e.Location;
+            };
 
-            m_MouseDownCoordinates = e.Location;
-
-            base.OnMouseDown(e);
-        }
-
-        protected override void OnMouseUp(MouseEventArgs e)
-        {
-            m_MouseIsDown = false;
-
-            base.OnMouseUp(e);
-        }
-
-        //
-        protected override void OnMouseMove(MouseEventArgs e)
-        {
-            base.OnMouseMove(e);
-
-            m_MouseClick = false;
-
-            if (m_MouseIsDown)
+            this.MouseUp += (sender, e) =>
             {
-                OnMoving(e);
-            }
-        }
+                m_MouseIsDown = false;
+            };
 
-        private void OnMoving(MouseEventArgs e)
-        {
-            Point LocationNew = new Point(this.Location.X + e.Location.X - m_MouseDownCoordinates.X,
-                this.Location.Y + e.Location.Y - m_MouseDownCoordinates.Y);
-
-            if (Move != null)
+            this.MouseMove += (sender, e) =>
             {
-                Move.Invoke(this, new MovingPanelEventArgs(LocationNew.X, LocationNew.Y));
-            }
+                if (m_MouseIsDown)
+                {
+                    Point LocationNew = new Point(m_HostForm.Location.X + e.Location.X - m_MouseDownCoordinates.X,
+                        m_HostForm.Location.Y + e.Location.Y - m_MouseDownCoordinates.Y);
+
+                    m_HostForm.Location = LocationNew;
+
+                    OnMove();
+                }
+            };
         }
-
-        //
-        protected override void OnMouseClick(MouseEventArgs e)
-        {
-            base.OnMouseClick(e);
-
-            if (!m_MouseClick)
-            {
-                return;
-            }
-
-            OnClicking();
-        }
-
-        private void OnClicking()
-        {
-            if (MouseClick != null)
-            {
-                MouseClick.Invoke(this, new MouseEventArgs(MouseButtons.None, 0, 0, 0, 0));
-            }
-        }
-
-        #endregion
     }
 }
