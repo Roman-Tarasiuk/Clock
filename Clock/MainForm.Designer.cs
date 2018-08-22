@@ -46,7 +46,7 @@
             this.lblClock.AutoSize = true;
             this.lblClock.Font = new System.Drawing.Font("Consolas", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.lblClock.ForeColor = System.Drawing.Color.White;
-            this.lblClock.Location = new System.Drawing.Point(8, 2);
+            this.lblClock.Location = new System.Drawing.Point(9, 2);
             this.lblClock.Name = "lblClock";
             this.lblClock.Size = new System.Drawing.Size(63, 14);
             this.lblClock.TabIndex = 0;
@@ -57,7 +57,7 @@
             this.lblDate.AutoSize = false;
             this.lblDate.Font = new System.Drawing.Font("Consolas", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.lblDate.ForeColor = System.Drawing.Color.White;
-            this.lblDate.Location = new System.Drawing.Point(1, 19);
+            this.lblDate.Location = new System.Drawing.Point(2, 19);
             this.lblDate.Name = "lblDate";
             this.lblDate.Size = new System.Drawing.Size(78, 14);
             this.lblDate.TabIndex = 1;

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Drawing;
 using System.Windows.Forms;
+using System.Configuration;
 
 using WindowsManipulations;
 using VisualComponents;
@@ -15,9 +16,15 @@ namespace Clock
         private DateTime m_CurrentDate = DateTime.Now;
         private bool m_Moving = false;
 
-        private Size m_WindowSize = new Size(80, 38);
+        private Size m_WindowSize = new Size(82, 38);
 
         private TransparentDraggablePanel panel1;
+
+        private Color m_BorderColor;
+        private int m_BorderLeft;
+        private int m_BorderTop;
+        private int m_BorderRight;
+        private int m_BorderBottom;
 
         #endregion
 
@@ -39,9 +46,9 @@ namespace Clock
         {
             base.OnPaint(e);
 
-            using (var Pen = new Pen(Color.Lime))
+            using (var Pen = new Pen(m_BorderColor))
             {
-                e.Graphics.DrawRectangle(Pen, new Rectangle(0, 0, m_WindowSize.Width - 1, m_WindowSize.Height - 1));
+                e.Graphics.DrawRectangle(Pen, new Rectangle(m_BorderLeft, m_BorderTop, m_BorderRight, m_BorderBottom));
             }
         }
 
@@ -50,6 +57,8 @@ namespace Clock
             InitializeComponent();
 
             InitializePanel();
+            InitializeOther();
+
             ShowDateTime(true);
         }
 
@@ -73,6 +82,37 @@ namespace Clock
 
             this.Controls.Add(this.panel1);
             this.panel1.BringToFront();
+        }
+
+        private void InitializeOther()
+        {
+            var borderColorStr = ConfigurationManager.AppSettings.Get("BorderColor");
+            var borderColorRGB = borderColorStr.Split(new string[] { ", " }, StringSplitOptions.None);
+            m_BorderColor = Color.FromArgb(int.Parse(borderColorRGB[0]),
+                int.Parse(borderColorRGB[1]),
+                int.Parse(borderColorRGB[2]));
+            
+            var backColorStr = ConfigurationManager.AppSettings.Get("BackColor");
+            var backColorRGB = backColorStr.Split(new string[] { ", " }, StringSplitOptions.None);
+            var backColor = Color.FromArgb(int.Parse(backColorRGB[0]),
+                int.Parse(backColorRGB[1]),
+                int.Parse(backColorRGB[2]));
+            this.BackColor = backColor;
+
+            var foreColorStr = ConfigurationManager.AppSettings.Get("ForeColor");
+            var foreColorRGB = foreColorStr.Split(new string[] { ", " }, StringSplitOptions.None);
+            var foreColor = Color.FromArgb(int.Parse(foreColorRGB[0]),
+                int.Parse(foreColorRGB[1]),
+                int.Parse(foreColorRGB[2]));
+            this.lblClock.ForeColor = foreColor;
+            this.lblDate.ForeColor = foreColor;
+
+            m_BorderLeft = int.Parse(ConfigurationManager.AppSettings.Get("BorderLeft"));
+            m_BorderTop = int.Parse(ConfigurationManager.AppSettings.Get("BorderTop"));
+            m_BorderRight = int.Parse(ConfigurationManager.AppSettings.Get("BorderRight"));
+            m_BorderBottom = int.Parse(ConfigurationManager.AppSettings.Get("BorderBottom"));
+
+
         }
 
         private void Panel1_MouseClick(object sender, MouseEventArgs e)
