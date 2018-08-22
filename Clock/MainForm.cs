@@ -87,23 +87,14 @@ namespace Clock
         private void InitializeOther()
         {
             var borderColorStr = ConfigurationManager.AppSettings.Get("BorderColor");
-            var borderColorRGB = borderColorStr.Split(new string[] { ", " }, StringSplitOptions.None);
-            m_BorderColor = Color.FromArgb(int.Parse(borderColorRGB[0]),
-                int.Parse(borderColorRGB[1]),
-                int.Parse(borderColorRGB[2]));
+            this.m_BorderColor = this.FromRgbString(borderColorStr);
             
             var backColorStr = ConfigurationManager.AppSettings.Get("BackColor");
-            var backColorRGB = backColorStr.Split(new string[] { ", " }, StringSplitOptions.None);
-            var backColor = Color.FromArgb(int.Parse(backColorRGB[0]),
-                int.Parse(backColorRGB[1]),
-                int.Parse(backColorRGB[2]));
+            var backColor = this.FromRgbString(backColorStr);
             this.BackColor = backColor;
 
             var foreColorStr = ConfigurationManager.AppSettings.Get("ForeColor");
-            var foreColorRGB = foreColorStr.Split(new string[] { ", " }, StringSplitOptions.None);
-            var foreColor = Color.FromArgb(int.Parse(foreColorRGB[0]),
-                int.Parse(foreColorRGB[1]),
-                int.Parse(foreColorRGB[2]));
+            var foreColor = this.FromRgbString(foreColorStr);
             this.lblClock.ForeColor = foreColor;
             this.lblDate.ForeColor = foreColor;
 
@@ -111,8 +102,6 @@ namespace Clock
             m_BorderTop = int.Parse(ConfigurationManager.AppSettings.Get("BorderTop"));
             m_BorderRight = int.Parse(ConfigurationManager.AppSettings.Get("BorderRight"));
             m_BorderBottom = int.Parse(ConfigurationManager.AppSettings.Get("BorderBottom"));
-
-
         }
 
         private void Panel1_MouseClick(object sender, MouseEventArgs e)
@@ -209,6 +198,23 @@ namespace Clock
             var strDateTime = now.ToLocalTime();
 
             Clipboard.SetText(strDateTime.ToString("dd.MM.yyyy HH:mm:ss,fff"));
+        }
+
+        private Color FromRgbString(string str)
+        {
+            try
+            {
+                var colorRGB = str.Split(new string[] { ", ", "; ", ",", ";" }, StringSplitOptions.None);
+                var result = Color.FromArgb(int.Parse(colorRGB[0]),
+                    int.Parse(colorRGB[1]),
+                    int.Parse(colorRGB[2]));
+                
+                return result;
+            }
+            catch (Exception e)
+            {
+                throw new ArgumentException("str", e);
+            }
         }
     }
 }
