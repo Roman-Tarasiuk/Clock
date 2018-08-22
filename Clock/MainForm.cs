@@ -15,7 +15,7 @@ namespace Clock
         private DateTime m_CurrentDate = DateTime.Now;
         private bool m_Moving = false;
 
-        private Size m_WindowSize = new Size(78, 38);
+        private Size m_WindowSize = new Size(80, 38);
 
         private TransparentDraggablePanel panel1;
 
@@ -32,6 +32,16 @@ namespace Clock
                 // turn on WS_EX_TOOLWINDOW style bit
                 cp.ExStyle |= 0x80;
                 return cp;
+            }
+        }
+
+        protected override void OnPaint(PaintEventArgs e)
+        {
+            base.OnPaint(e);
+
+            using (var Pen = new Pen(Color.Lime))
+            {
+                e.Graphics.DrawRectangle(Pen, new Rectangle(0, 0, m_WindowSize.Width - 1, m_WindowSize.Height - 1));
             }
         }
 
