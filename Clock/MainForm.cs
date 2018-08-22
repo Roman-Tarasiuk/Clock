@@ -111,7 +111,7 @@ namespace Clock
                 CalendarForm calendar = new CalendarForm();
                 calendar.SetLocationAndSize(this);
 
-                calendar.ShowDialog();
+                calendar.Show();
 
                 User32Helper.ShowWindow(this.Handle, User32Helper.SW_RESTORE);
             }
