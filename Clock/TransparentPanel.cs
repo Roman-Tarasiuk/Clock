@@ -23,16 +23,6 @@ namespace VisualComponents
             InitializeComponents();
         }
 
-        public event EventHandler Moved;
-
-        protected void OnMove()
-        {
-            if (this.Moved != null)
-            {
-                this.Moved(this, EventArgs.Empty);
-            }
-        }
-
         protected override CreateParams CreateParams
         {
             get
@@ -72,8 +62,6 @@ namespace VisualComponents
                         m_HostForm.Location.Y + e.Location.Y - m_MouseDownCoordinates.Y);
 
                     m_HostForm.Location = LocationNew;
-
-                    OnMove();
                 }
             };
         }

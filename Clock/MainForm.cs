@@ -75,10 +75,6 @@ namespace Clock
             this.panel1.Size = this.Size;
             this.panel1.TabIndex = 2;
             this.panel1.MouseClick += Panel1_MouseClick;
-            this.panel1.Moved += (s, e) =>
-            {
-                m_Moving = true;
-            };
 
             this.Controls.Add(this.panel1);
             this.panel1.BringToFront();
@@ -102,6 +98,11 @@ namespace Clock
             m_BorderTop = int.Parse(ConfigurationManager.AppSettings.Get("BorderTop"));
             m_BorderRight = int.Parse(ConfigurationManager.AppSettings.Get("BorderRight"));
             m_BorderBottom = int.Parse(ConfigurationManager.AppSettings.Get("BorderBottom"));
+               
+            this.Move += (s, e) =>
+            {
+                m_Moving = true;
+            };
         }
 
         private void Panel1_MouseClick(object sender, MouseEventArgs e)
